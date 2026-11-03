@@ -8,9 +8,13 @@ date: "2026-11-03"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Binnen read.csv telkens eigen pad zetten!!
 ```{r}
 data <- read.csv("/Users/alexislagers/Desktop/new_cust_billing_event_log_2026-10-08-1524_clean.csv")
 
 head(data)
+```
+```{r}
+
 ```
 
