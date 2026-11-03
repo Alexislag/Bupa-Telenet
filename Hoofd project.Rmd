@@ -14,9 +14,15 @@ data <- read.csv("/Users/alexislagers/Desktop/new_cust_billing_event_log_2026-10
 
 head(data)
 ```
+
+
 ```{r}
 
 library(ggplot2)
+
+```
+
+```{r}
 
 ```
 
