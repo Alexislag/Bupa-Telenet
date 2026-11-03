@@ -16,5 +16,7 @@ head(data)
 ```
 ```{r}
 
+library(ggplot2)
+
 ```
 
