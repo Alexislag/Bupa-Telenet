@@ -17,9 +17,52 @@ head(data)
 
 
 ```{r}
+library(tidyr)
+library(lubridate)
+library(bupaR)
+library(data.table)
 
-library(ggplot2)
+# 2. Timestamp omzetten en de twee ontbrekende kolommen aanmaken
+data <- data %>%
+  mutate(
+    EL_ACTIVITY_START_TIMESTAMP = as.POSIXct(
+      EL_ACTIVITY_START_TIMESTAMP,
+      format = "%Y-%m-%d %H:%M:%OS %z",
+      tz = "Europe/Brussels"
+    ),
+    lifecycle = "complete",   # elke rij is één afgerond event
+    resource  = "unknown"     # er is geen originator in de log
+  ) %>%
+  arrange(EL_CASE_ID, EL_ACTIVITY_START_TIMESTAMP)
+
+# 3. Eventlog aanmaken
+log <- eventlog(
+  eventlog             = data,
+  case_id              = "EL_CASE_ID",
+  activity_id          = "EL_ACTIVITY_TYPE",
+  activity_instance_id = "EL_EVENT_ID",
+  timestamp            = "EL_ACTIVITY_START_TIMESTAMP",
+  lifecycle_id         = "lifecycle",
+  resource_id          = "resource"
+)
+
+# 4. Snelle check: verwacht 301.980 events, 25.819 cases, 28 activiteiten
+n_cases(log)
+n_activities(log)
+nrow(log)
 
 ```
+<<<<<<< HEAD
 hallo test test test
+=======
+
+```{r}
+log_simple <- log %>%
+  filter_trace_frequency(percentage = 0.80) %>%      # keep the most common variants covering 80% of cases
+  filter_activity_frequency(percentage = 0.95)       # drop very rare activities
+
+log_simple %>% process_map(type = frequency("relative_case"))
+```
+
+>>>>>>> 22524be (processmap)
 
